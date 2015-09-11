@@ -4,7 +4,7 @@
       <fieldset>
         <div class="form-group" show-errors>
           <label for="companyName">Company Name</label>
-          <input id="companyName" name="companyName" class="form-control" ng-model="companyDetails.companyName" placeholder="Company Name" required>
+          <input type="text" id="companyName" name="companyName" class="form-control" ng-model="companyDetails.name" placeholder="Company Name" required>
           <div ng-messages="companyForm.companyName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Company Name cannot be blank.</p>
           </div>

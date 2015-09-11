@@ -10,7 +10,8 @@ var path = require('path'),
   User = mongoose.model('User'),
   nodemailer = require('nodemailer'),
   async = require('async'),
-  crypto = require('crypto');
+  crypto = require('crypto'),
+    Company = mongoose.model('Company');
 
 var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
@@ -254,4 +255,48 @@ exports.changePassword = function (req, res, next) {
       message: 'User is not signed in'
     });
   }
+};
+
+exports.updateCompanyDetails1 = function (req, res) {
+    var companyDetails = req.body;
+    var message = null;
+
+    if (req.user) {
+        if (companyDetails.name) {
+            User.findById(req.user.id, function (err, user) {
+                console.log(req.body);
+                if (!err && user) {
+                    var company = new Company(req.body);
+                    company.save(function (err) {
+                        if (err) {
+                            return res.status(400).send({
+                                message: errorHandler.getErrorMessage(err)
+                            });
+                        }
+                        else {
+                            req.user.company = company;
+                            req.user.save(function (err) {
+                                if (err) {
+                                    return res.status(400).send({
+                                        message: errorHandler.getErrorMessage(err)
+                                    });
+                                }
+                                else {
+                                    res.send();
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+
+                }
+            });
+        }
+        else {
+
+        }
+
+    }
+
 };

@@ -97,6 +97,10 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+    company: {
+        type: Schema.ObjectId,
+        ref: 'Company'
+    },
   /* For reset password */
   resetPasswordToken: {
     type: String

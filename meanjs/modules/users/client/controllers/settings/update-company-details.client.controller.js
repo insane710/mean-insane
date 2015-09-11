@@ -18,15 +18,14 @@ angular.module('users').controller('UpdateCompanyDetailsController', ['$scope', 
                 return false;
             }
 
-            var user = new Users($scope.user);
-
-            user.$update(function (response) {
+            $http.put('/api/users/company', $scope.companyDetails).success(function (response) {
+                // If successful show success message and clear form
                 $scope.$broadcast('show-errors-reset', 'companyForm');
 
                 $scope.success = true;
-                Authentication.user = response;
-            }, function (response) {
-                $scope.error = response.data.message;
+                $scope.companyDetails = null;
+            }).error(function (response) {
+                $scope.error = response.message;
             });
         };
     }
