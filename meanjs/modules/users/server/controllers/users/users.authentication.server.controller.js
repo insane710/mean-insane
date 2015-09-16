@@ -68,7 +68,13 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
-          res.json(user);
+            User.findOne({_id:user._id}).populate([{path: 'company', select:'name'}]).exec(function(err, user){
+                if (err){
+                    res.status(400).send(err);
+                }
+                res.json(user);
+            });
+
         }
       });
     }
