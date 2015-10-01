@@ -120,14 +120,15 @@ var path = require('path'),
    * Kiosk middleware
    */
   exports.kioskByID = function (req, res, next, id) {
+    console.log(id);
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return res.status(400).send({
+    //     message: 'Kiosk is invalid'
+    //   });
+    // }
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).send({
-        message: 'Kiosk is invalid'
-      });
-    }
-
-    Kiosk.findById(id).populate('user', 'displayName').exec(function (err, kiosk) {
+    Kiosk.find({externalKioskId: id})
+    .exec(function (err, kiosk) {
       if (err) {
         return next(err);
       } else if (!kiosk) {
@@ -135,7 +136,7 @@ var path = require('path'),
           message: 'No kiosk with that identifier has been found'
         });
       }
-      req.kiosk = kiosk;
+      req.kiosk = kiosk[0];
       next();
     });
   };

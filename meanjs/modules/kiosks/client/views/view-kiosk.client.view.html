@@ -12,11 +12,11 @@
   </div>
   <small>
     <em class="text-muted">
-      Posted on
-      <span ng-bind="kiosk.created | date:'mediumDate'"></span>
-      by
-      <span ng-bind="kiosk.user.displayName"></span>
+      Created on
+      <span ng-bind="kiosk.createdAt | date:'mediumDate'"></span>
+      <!-- by
+      <span ng-bind="kiosk.user.displayName"></span> -->
     </em>
   </small>
-  <p class="lead" ng-bind="kiosk.content"></p>
+  <p class="lead" ng-bind="kiosk.address"></p>
 </section>

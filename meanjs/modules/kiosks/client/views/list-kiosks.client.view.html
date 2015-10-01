@@ -3,7 +3,7 @@
     <h1>Kiosks</h1>
   </div>
   <div class="list-group">
-    <a ng-repeat="kiosk in kiosks" ui-sref="kiosks.view({kioskId: kiosk._id})" class="list-group-item">
+    <a ng-repeat="kiosk in kiosks" ui-sref="kiosks.view({kioskId: kiosk.externalKioskId})" class="list-group-item">
       <small class="list-group-item-text">
         <span ng-bind="kiosk.externalKioskId"></span>
         <!-- <span ng-bind="kiosk.createdAt | date:'mediumDate'"></span> -->

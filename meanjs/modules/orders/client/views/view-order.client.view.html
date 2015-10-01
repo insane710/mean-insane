@@ -1,0 +1,22 @@
+<section ng-controller="OrdersController" ng-init="findOne()">
+  <div class="page-header">
+    <h1 ng-bind="order.orderId"></h1>
+  </div>
+  <div class="pull-right">
+    <a class="btn btn-primary" ui-sref="orders.edit({orderId: order._id})">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove();">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Status:
+      <span ng-bind="order.orderStatus"></span>
+      at
+      <span ng-bind="order.actualDeliveryDateTime | date:'mediumDate'"></span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="order.vendor"></p>
+</section>

@@ -1,0 +1,18 @@
+<section ng-controller="OrdersController" ng-init="find()">
+  <div class="page-header">
+    <h1>Orders</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="order in orders" ui-sref="orders.view({orderId: order._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        <span ng-bind="order.orderId"></span>
+        <!-- <span ng-bind="order.createdAt | date:'mediumDate'"></span> -->
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="order.vendor"></h4>
+      <p class="list-group-item-text" ng-bind="order.orderStatus"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="orders.$resolved && !orders.length">
+    No orders yet, why don't you <a ui-sref="orders.create">create one</a>?
+  </div>
+</section>
