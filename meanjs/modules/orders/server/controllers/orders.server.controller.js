@@ -75,7 +75,7 @@ exports.delete = function (req, res) {
  * List of Orders
  */
 exports.list = function (req, res) {
-  Order.find().sort('-created').populate('user', 'displayName').exec(function (err, orders) {
+  Order.find().sort('-created').populate('user', 'displayName').select('-_id orderId kioskId orderStatus vendor').exec(function (err, orders) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
