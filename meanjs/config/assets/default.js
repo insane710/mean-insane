@@ -20,7 +20,9 @@ module.exports = {
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/Chart.js/Chart.min.js',
-        'public/lib/angular-chart.js/dist/angular-chart.js'
+        'public/lib/angular-chart.js/dist/angular-chart.js',
+        'public/lib/d3/d3.min.js',
+        'public/lib/angular-charts/dist/angular-charts.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

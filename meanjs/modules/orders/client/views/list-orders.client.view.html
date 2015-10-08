@@ -23,7 +23,7 @@
   chart-click="onClick">
   </canvas> -->
 
-  <div class="chartsize">
+  <!-- <div class="chartsize">
   <canvas id="bar" class="chart chart-bar chartsize"
   chart-data="barData" chart-labels="labels"
   chart-legend="true" chart-series="series">
@@ -34,7 +34,10 @@
   <canvas id="pie" class="chart chart-pie"
     chart-data="pieData" chart-labels="pieLabels">
   </canvas>
-  </div>
+  </div> -->
+
+
+
   <!-- <canvas id="doughnut" class="chart chart-doughnut"
   chart-data="pieData" chart-labels="labels">
   </canvas> -->
@@ -55,5 +58,8 @@
   <div class="alert alert-warning text-center" ng-if="orders.$resolved && !orders.length">
     No orders yet, why don't you <a ui-sref="orders.create">create one</a>?
   </div> -->
+
+
+  <div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div>
 
 </section>

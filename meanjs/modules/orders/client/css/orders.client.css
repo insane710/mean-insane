@@ -15,3 +15,8 @@
   float: right;
   top: 0px !important;
 }
+
+.chart {
+  width: 553px;
+  height: 275px;
+}

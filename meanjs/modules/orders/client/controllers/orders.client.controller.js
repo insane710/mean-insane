@@ -137,7 +137,62 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
 
       $scope.pieLabels = orderStatuses;
       $scope.pieData = [totalPendingOrders, totalDeliveredOrders, totalUndeliveredOrders];
+
+      var dataPointsArray = [];
+      for (var i in labels) {
+        var dataJSON = {
+          x: labels[i],
+          y: [pendingOrders[i], deliveredOrders[i], undeliveredOrders[i]],
+          tooltip: ""
+        };
+        console.log(dataJSON);
+        dataPointsArray.push(dataJSON);
+      }
+          $scope.data = {
+            series: orderStatuses,
+            data : dataPointsArray
+          }
+          console.log('orderStatuses ' + orderStatuses);
+          console.log('dataPointsArray ' + dataPointsArray);
     };
+
+    $scope.messages = [];
+
+    $scope.chartType = 'bar';
+
+    $scope.config = {
+      labels: false,
+      title : "Products",
+      legend : {
+        display: true,
+        position:'right'
+      },
+      click : function(d) {
+        $scope.messages.push('clicked!');
+      },
+      mouseover : function(d) {
+        $scope.messages.push('mouseover!');
+      },
+      mouseout : function(d) {
+        $scope.messages.push('mouseout!');
+      },
+      innerRadius: 0,
+      lineLegend: 'lineEnd',
+    }
+
+    // var acData = {
+    //   series: ["Sales", "Income", "Expense"],
+    //   data: [{
+    //     x: "Computers",
+    //     y: [54, 0, 879],
+    //     tooltip: "This is a tooltip"
+    //   },
+    //   {
+    //     x: "Computers",
+    //     y: [54, 0, 879],
+    //     tooltip: "This is a tooltip"
+    //   }]
+    // };
 
   }
 ]);
