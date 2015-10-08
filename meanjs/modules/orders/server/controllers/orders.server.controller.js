@@ -74,14 +74,68 @@ exports.delete = function (req, res) {
 /**
  * List of Orders
  */
-exports.list = function (req, res) {
-  Order.find().sort('-created').populate('user', 'displayName').select('-_id orderId kioskId orderStatus vendor').exec(function (err, orders) {
+exports.list1 = function (req, res) {
+  Order.find()
+  .sort('-created')
+  .populate('user', 'displayName')
+  .select('-_id orderId kioskId orderStatus vendor')
+  .exec(function (err, orders) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
       res.json(orders);
+    }
+  });
+};
+
+exports.allKiosks = function (req, res) {
+  Order.find().distinct('kioskId')
+  .exec(function (err, kiosks) {
+
+    Order.find().distinct('orderStatus')
+    .exec(function (err, statuses) {
+
+    });
+    
+  });
+};
+
+exports.list2 = function (req, res) {
+  Order.aggregate()
+  .group({ _id: '$kioskId', count: {$sum: 1} })
+  .exec(function (err, results) {
+    if (err) {
+        res.json(err);
+    } else {
+        res.json(results);
+    }
+  });
+  // Order.aggregate([
+  //       {
+  //           $group: {
+  //               _id: '$kioskId',  //$region is the column name in collection
+  //               count: {$sum: 1}
+  //           }
+  //       }
+  //   ], function (err, result) {
+  //       if (err) {
+  //           res.json(err);
+  //       } else {
+  //           res.json(result);
+  //       }
+  //   });
+};
+
+exports.list = function (req, res) {
+  Order.aggregate()
+  .group({ _id: { kiosk: '$kioskId', orderStatus: '$orderStatus' }, orderCount: {$sum: 1} })
+  .exec(function (err, results) {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(results);
     }
   });
 };

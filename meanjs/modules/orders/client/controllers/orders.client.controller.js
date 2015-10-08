@@ -1,8 +1,8 @@
 'use strict';
 
 // Orders controller
-angular.module('orders').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders',
-  function ($scope, $stateParams, $location, Authentication, Orders) {
+angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '$log', '$stateParams', '$location', 'Authentication', 'Orders',
+  function ($scope, $timeout, $log, $stateParams, $location, Authentication, Orders) {
     $scope.authentication = Authentication;
 
     // Create new Order
@@ -72,6 +72,7 @@ angular.module('orders').controller('OrdersController', ['$scope', '$stateParams
     // Find a list of Orders
     $scope.find = function () {
       $scope.orders = Orders.query();
+      $scope.showGraph();
     };
 
     // Find existing Order
@@ -80,5 +81,63 @@ angular.module('orders').controller('OrdersController', ['$scope', '$stateParams
         orderId: $stateParams.orderId
       });
     };
+
+    $scope.showGraph = function() {
+      angular.forEach($scope.orders, function(kiosksJSON,index) {
+        console.log(kiosksJSON._id);
+      });
+
+      var labels = [];
+      angular.forEach($scope.orders, function(kiosksJSON,index) {
+        if (labels.indexOf(kiosksJSON._id.kiosk) === -1) {
+          labels.push(kiosksJSON._id.kiosk);
+        }
+      });
+
+      var orderStatuses = ['PENDING', 'DELIVERED', 'UNDELIVERED'];
+      var pendingOrders = new Array(labels.length + 1).join('0').split('');
+      var deliveredOrders = new Array(labels.length + 1).join('0').split('');
+      var undeliveredOrders = new Array(labels.length + 1).join('0').split('');
+
+      var totalPendingOrders = 0;
+      var totalDeliveredOrders = 0;
+      var totalUndeliveredOrders = 0;
+
+      angular.forEach($scope.orders,function(kiosksJSON,index) {
+        if (labels.indexOf(kiosksJSON._id.kiosk) === -1) {
+          labels.push(kiosksJSON._id.kiosk);
+        }
+        if (orderStatuses.indexOf(kiosksJSON._id.orderStatus) === -1) {
+          orderStatuses.push(kiosksJSON._id.orderStatus);
+        }
+        switch (kiosksJSON._id.orderStatus) {
+          case 'PENDING':
+            pendingOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
+            break;
+          case 'DELIVERED':
+            deliveredOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
+            // deliveredOrders.splice(labels.indexOf(kiosksJSON._id.kiosk), 0, kiosksJSON.orderCount);
+            break;
+          case 'UNDELIVERED':
+            undeliveredOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
+            break;
+          default:
+            break;
+        }
+      });
+
+      $scope.labels = labels;
+      $scope.series = orderStatuses;
+      $scope.barData = [pendingOrders, deliveredOrders, undeliveredOrders];
+
+      totalPendingOrders = pendingOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
+      totalDeliveredOrders = deliveredOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
+      totalUndeliveredOrders = undeliveredOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
+      console.log("totalUndeliveredOrders " + totalUndeliveredOrders + "\ntotalDeliveredOrders " + totalDeliveredOrders + "\ntotalPendingOrders " + totalPendingOrders);
+
+      $scope.pieLabels = orderStatuses;
+      $scope.pieData = [totalPendingOrders, totalDeliveredOrders, totalUndeliveredOrders];
+    };
+
   }
 ]);

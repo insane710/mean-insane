@@ -3,3 +3,15 @@
   width: 1100px;
   height: 500px;
 }
+
+.chartsize {
+  width: 553px;
+  height: 275px;
+}
+
+.piesize {
+  width: 553px;
+  height: 275px;
+  float: right;
+  top: 0px !important;
+}

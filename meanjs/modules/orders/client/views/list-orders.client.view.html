@@ -3,9 +3,46 @@
   <div class="page-header">
     <h1>Orders</h1>
   </div>
-  <div id="grid1" ui-grid="{ data: orders }" class="grid"></div>
 
-  <!-- <div class="list-group">
+  <button ng-click="showGraph()">Show Graph</button>
+
+  <!-- <div class="btn-group" dropdown is-open="status.isopen">
+    <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
+      {{selectedChartType}} <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+      <li ng-repeat="chartType in chartTypes">
+        <a ng-click="showGraph(chartType)">{{chartType}}</a>
+      </li>
+    </ul>
+  </div> -->
+
+  <!-- <canvas id="line" class="chart chart-line"
+  chart-data="data" chart-labels="labels"
+  chart-legend="true" chart-series="series"
+  chart-click="onClick">
+  </canvas> -->
+
+  <div class="chartsize">
+  <canvas id="bar" class="chart chart-bar chartsize"
+  chart-data="barData" chart-labels="labels"
+  chart-legend="true" chart-series="series">
+  </canvas>
+  </div>
+
+  <div class="piesize">
+  <canvas id="pie" class="chart chart-pie"
+    chart-data="pieData" chart-labels="pieLabels">
+  </canvas>
+  </div>
+  <!-- <canvas id="doughnut" class="chart chart-doughnut"
+  chart-data="pieData" chart-labels="labels">
+  </canvas> -->
+
+
+  <!-- <div id="grid1" ui-grid="{ data: orders }" class="grid"></div>
+
+  <div class="list-group">
     <a ng-repeat="order in orders" ui-sref="orders.view({orderId: order._id})" class="list-group-item">
       <small class="list-group-item-text">
         <span ng-bind="order.orderId"></span>
@@ -18,4 +55,5 @@
   <div class="alert alert-warning text-center" ng-if="orders.$resolved && !orders.length">
     No orders yet, why don't you <a ui-sref="orders.create">create one</a>?
   </div> -->
+
 </section>
