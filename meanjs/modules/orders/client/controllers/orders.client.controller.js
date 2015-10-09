@@ -82,12 +82,16 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
       });
     };
 
+    var pendingOrders;
+    var deliveredOrders;
+    var undeliveredOrders;
+    var labels = [];
+
     $scope.showGraph = function() {
       angular.forEach($scope.orders, function(kiosksJSON,index) {
         console.log(kiosksJSON._id);
       });
 
-      var labels = [];
       angular.forEach($scope.orders, function(kiosksJSON,index) {
         if (labels.indexOf(kiosksJSON._id.kiosk) === -1) {
           labels.push(kiosksJSON._id.kiosk);
@@ -95,9 +99,9 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
       });
 
       var orderStatuses = ['PENDING', 'DELIVERED', 'UNDELIVERED'];
-      var pendingOrders = new Array(labels.length + 1).join('0').split('');
-      var deliveredOrders = new Array(labels.length + 1).join('0').split('');
-      var undeliveredOrders = new Array(labels.length + 1).join('0').split('');
+      pendingOrders = new Array(labels.length + 1).join('0').split('');
+      deliveredOrders = new Array(labels.length + 1).join('0').split('');
+      undeliveredOrders = new Array(labels.length + 1).join('0').split('');
 
       var totalPendingOrders = 0;
       var totalDeliveredOrders = 0;
@@ -112,17 +116,17 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
         }
         switch (kiosksJSON._id.orderStatus) {
           case 'PENDING':
-            pendingOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
-            break;
+          pendingOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
+          break;
           case 'DELIVERED':
-            deliveredOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
-            // deliveredOrders.splice(labels.indexOf(kiosksJSON._id.kiosk), 0, kiosksJSON.orderCount);
-            break;
+          deliveredOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
+          // deliveredOrders.splice(labels.indexOf(kiosksJSON._id.kiosk), 0, kiosksJSON.orderCount);
+          break;
           case 'UNDELIVERED':
-            undeliveredOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
-            break;
+          undeliveredOrders[labels.indexOf(kiosksJSON._id.kiosk)] = kiosksJSON.orderCount;
+          break;
           default:
-            break;
+          break;
         }
       });
 
@@ -133,7 +137,6 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
       totalPendingOrders = pendingOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
       totalDeliveredOrders = deliveredOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
       totalUndeliveredOrders = undeliveredOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
-      console.log("totalUndeliveredOrders " + totalUndeliveredOrders + "\ntotalDeliveredOrders " + totalDeliveredOrders + "\ntotalPendingOrders " + totalPendingOrders);
 
       $scope.pieLabels = orderStatuses;
       $scope.pieData = [totalPendingOrders, totalDeliveredOrders, totalUndeliveredOrders];
@@ -145,15 +148,13 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
           y: [pendingOrders[i], deliveredOrders[i], undeliveredOrders[i]],
           tooltip: ""
         };
-        console.log(dataJSON);
+
         dataPointsArray.push(dataJSON);
       }
-          $scope.data = {
-            series: orderStatuses,
-            data : dataPointsArray
-          }
-          console.log('orderStatuses ' + orderStatuses);
-          console.log('dataPointsArray ' + dataPointsArray);
+      $scope.data = {
+        series: orderStatuses,
+        data : dataPointsArray
+      };
     };
 
     $scope.messages = [];
@@ -162,7 +163,7 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
 
     $scope.config = {
       labels: false,
-      title : "Products",
+      title : "Orders by Kiosk",
       legend : {
         display: true,
         position:'right'
@@ -178,8 +179,17 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
       },
       innerRadius: 0,
       lineLegend: 'lineEnd',
-    }
+    };
 
+    $scope.selectedKiosk = "Select a Kiosk";
+    $scope.showPieChartForKiosk = function(kioskId) {
+      $scope.selectedKiosk = kioskId;
+
+      var kioskIndex = labels.indexOf(kioskId);
+      if (kioskIndex !== -1) {
+        $scope.pieData = [pendingOrders[kioskIndex], deliveredOrders[kioskIndex], undeliveredOrders[kioskIndex]];
+      }
+    };
     // var acData = {
     //   series: ["Sales", "Income", "Expense"],
     //   data: [{

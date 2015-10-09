@@ -20,3 +20,27 @@
   width: 553px;
   height: 275px;
 }
+
+
+.container {
+    width: 1200px;
+    /*height: 1000px;*/
+    /*float: left;*/
+}
+.left {
+    max-width: 100%;
+    /*background:red;*/
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    -ms-text-overflow:ellipsis;
+    float: left;
+}
+.right {
+    /*background:yellow;*/
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    -ms-text-overflow:ellipsis;
+    text-align: center;
+}
