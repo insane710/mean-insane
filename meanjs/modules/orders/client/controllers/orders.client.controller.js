@@ -96,7 +96,6 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
     var cityCountJSON = {};
 
     $scope.showLineGraph = function() {
-      labels = [];
       lineLabels = [];
       cityCountJSON = {};
 
@@ -262,7 +261,7 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
     $scope.sumOfArray = function (array) {
       var totalSum = 0;
       for (var index in array) {
-        totalSum =+ parseInt(array[index]);
+        totalSum += parseInt(array[index]);
       }
       return totalSum;
     };
