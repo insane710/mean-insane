@@ -4,57 +4,64 @@
     <button ng-click="showAllGraphs()">Load</button>
   </div>
 
-  <!-- <div>
-    <canvas id="line" class="chart chart-line"
-    chart-data="lineData" chart-labels="lineLabels"
-    chart-legend="true" chart-series="lineSeries"
-    chart-click="onClick">
-  </canvas>
-</div> -->
+  <div class="container">
+    <div class="header">
+      <h1>Angular Charts (D3)</h1>
+    </div>
+    <div class="left">
+      <div ac-chart="firstChartType" ac-data="firstChartData" ac-config="firstChartConfig" id='linechart' class='linechart'></div>
+    </div>
+    <div class="right">
 
-<div class="container">
-<div class="header">
-  <h1>Angular Charts (D3)</h1>
-</div>
-<div>
-  <div ac-chart="firstChartType" ac-data="firstChartData" ac-config="firstChartConfig" id='linechart' class='linechart'></div>
-</div>
-</div>
+      <div class="btn-group" dropdown is-open="status.isopen">
+        <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
+          {{selectedCity}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+          <li ng-repeat="city in allCities">
+            <a ng-click="showLineChartForCity(city)">{{city}}</a>
+          </li>
+        </ul>
+      </div>
 
-<div class="header">
-  <h1>Angular-Charts (Chart.js)</h1>
-</div>
-<div class="header">
-  <h4>Orders by Kiosk</h4>
-</div>
+      <div ac-chart="firstChartType" ac-data="cityChartData" ac-config="firstChartConfig" id='linechart' class='linechart'></div>
+    </div>
+  </div>
 
-<div class="container">
-  <div class="left">
-    <canvas id="bar" class="chart chart-bar"
-    chart-data="barData" chart-labels="labels"
-    chart-legend="true" chart-series="series">
-  </canvas>
-</div>
-
-<div class="right">
   <div class="header">
-    <h4>All Orders</h4>
+    <h1>Angular-Charts (Chart.js)</h1>
+  </div>
+  <div class="header">
+    <h4>Orders by Kiosk</h4>
   </div>
 
-  <div class="btn-group" dropdown is-open="status.isopen">
-    <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
-      {{selectedKiosk}} <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-      <li ng-repeat="label in labels">
-        <a ng-click="showPieChartForKiosk(label)">{{label}}</a>
-      </li>
-    </ul>
+  <div class="container">
+    <div class="left">
+      <canvas id="bar" class="chart chart-bar"
+      chart-data="barData" chart-labels="labels"
+      chart-legend="true" chart-series="series">
+    </canvas>
   </div>
 
-  <canvas id="pie" class="chart chart-pie"
-  chart-data="pieData" chart-labels="pieLabels">
-</canvas>
+  <div class="right">
+    <div class="header">
+      <h4>All Orders</h4>
+    </div>
+
+    <!-- <div class="btn-group" dropdown is-open="status.isopen">
+      <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
+        {{selectedKiosk}} <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+        <li ng-repeat="label in labels">
+          <a ng-click="showPieChartForKiosk(label)">{{label}}</a>
+        </li>
+      </ul>
+    </div> -->
+
+    <canvas id="pie" class="chart chart-pie"
+    chart-data="pieData" chart-labels="pieLabels">
+  </canvas>
 </div>
 </div>
 

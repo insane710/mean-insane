@@ -93,29 +93,82 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
     var undeliveredOrders;
     var labels = [];
     var lineLabels = [];
+    var cityCountJSON = {};
 
     $scope.showLineGraph = function() {
-      var orderCountArray = [];
-      angular.forEach($scope.ordersByDay, function(kiosksJSON,index) {
-        orderCountArray.push(kiosksJSON.count);
-        lineLabels.push(kiosksJSON._id);
+      labels = [];
+      lineLabels = [];
+      cityCountJSON = {};
+
+      var totalOrderCountArray = [];
+      var cities = ['All Cities'];
+      cityCountJSON['All Cities'] = [];
+
+      angular.forEach($scope.ordersByDay, function(ordersJSON,index) {
+        cityCountJSON['All Cities'].push(ordersJSON.totalCount);
+        lineLabels.push(ordersJSON.date);
+
+        var cityOrdersArray = [];
+        for (index in ordersJSON.allOrders) {
+          var city = ordersJSON.allOrders[index].city;
+          if (cities.indexOf(city) === -1) {
+            cities.push(ordersJSON.allOrders[index].city);
+          }
+          cityOrdersArray.push(ordersJSON.allOrders[index].count);
+
+          if (city in cityCountJSON) {
+            cityCountJSON[city].push(ordersJSON.allOrders[index].count);
+          } else {
+            cityCountJSON[city] = [];
+            cityCountJSON[city].push(ordersJSON.allOrders[index].count);
+          }
+        }
       });
 
       var dataPointsArray = [];
       for (var i in lineLabels) {
         var dataJSON = {
           x: lineLabels[i],
-          y: [orderCountArray[i]],
+          y: [
+            cityCountJSON[cities[0]][i],
+            cityCountJSON[cities[1]][i],
+            cityCountJSON[cities[2]][i],
+            cityCountJSON[cities[3]][i]
+          ],
           tooltip: ""
         };
 
         dataPointsArray.push(dataJSON);
       }
+
       $scope.firstChartData = {
-        series: ['Orders'],
+        series: cities,
         data: dataPointsArray
       };
 
+      $scope.selectedCity = cities[1];
+      $scope.showLineChartForCity($scope.selectedCity);
+
+      $scope.allCities = cities;
+    };
+
+    $scope.showLineChartForCity = function (city) {
+      $scope.selectedCity = city;
+
+      var dataPointsArray1 = [];
+      for (var i1 in lineLabels) {
+        var dataJSON1 = {
+          x: lineLabels[i1],
+          y: [cityCountJSON[$scope.selectedCity][i1]],
+          tooltip: ""
+        };
+        dataPointsArray1.push(dataJSON1);
+      }
+
+      $scope.cityChartData = {
+        series: [$scope.selectedCity],
+        data: dataPointsArray1
+      };
     };
 
     $scope.showGraph = function() {
@@ -190,7 +243,7 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
       labels: false,
       title : "Orders Received by Day",
       legend : {
-        display: true,
+        display: false,
         position:'right'
       },
       click : function(d) {

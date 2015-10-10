@@ -199,41 +199,75 @@ exports.ordersCountByDay = function (req, res) {
   Order.aggregate([
     {
       $group : {
-        _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+        _id: { date: { $dateToString: { format: "%d/%m/%Y", date: "$createdAt" } }, city: "$city" },
         count: {
           $sum: 1
         }
       }
     },
-    // {
-    //   $project: {
-    //     date: {
-    //       $concat: [
-    //           "$_id.fullDate.day",
-    //           "/",
-    //           "$_id.fullDate.month",
-    //           "/",
-    //           "$_id.fullDate.year"
-    //       ]
-    //     },
-    //     count: 1,
-    //     _id: 0
-    //   }
-    // },
+    {
+      $project: {
+        date: "$_id.date",
+        orders: {
+          city: "$_id.city",
+          count: "$count"
+        },
+        _id: 0
+      }
+    },
     {
       $sort: {
-        "_id": 1
+        "date": 1
       }
     }
   ], function (err, result) {
+    var result1 = groupBy(result, function(item) {
+        return item.date;
+    });
+    var finalResult = createDateWiseJSON(result1);
     if (err) {
       res.json(err);
     } else {
-      res.json(result);
+      res.json(finalResult);
     }
   });
 };
 
+function createDateWiseJSON(list) {
+  var finalJSONArray = [];
+  for (var i = 0; i < list.length; i++) {
+    var jsonArray = list[i];
+
+    var kioskJSON = {};
+    kioskJSON.date = jsonArray[0].date;
+    kioskJSON.allOrders = [];
+    kioskJSON.allOrders.push(jsonArray[0].orders);
+    kioskJSON.allOrders.push(jsonArray[1].orders);
+    kioskJSON.allOrders.push(jsonArray[2].orders);
+    kioskJSON.allOrders = sortArray(kioskJSON.allOrders);
+
+    kioskJSON.orders = {};
+    kioskJSON.orders[jsonArray[0].orders.city] = jsonArray[0].orders.count;
+    kioskJSON.orders[jsonArray[1].orders.city] = jsonArray[1].orders.count;
+    kioskJSON.orders[jsonArray[2].orders.city] = jsonArray[2].orders.count;
+    kioskJSON.totalCount = jsonArray[0].orders.count + jsonArray[1].orders.count + jsonArray[2].orders.count;
+
+    finalJSONArray.push(kioskJSON);
+  }
+
+  return finalJSONArray;
+}
+
+function sortArray(list) {
+  list.sort(function (a, b) {
+    var city1 = a.city;
+    var city2 = b.city;
+    console.log(city1 + city2);
+    return (city1).localeCompare(city2);
+  });
+
+  return list;
+}
 /**
  * Order middleware
  */
