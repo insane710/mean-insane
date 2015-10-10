@@ -13,7 +13,7 @@
     </div>
     <div class="right">
 
-      <div class="btn-group" dropdown is-open="status.isopen">
+      <div class="btn-group" dropdown is-open="status.isopen1">
         <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
           {{selectedCity}} <span class="caret"></span>
         </button>
@@ -48,7 +48,7 @@
       <h4>All Orders</h4>
     </div>
 
-    <!-- <div class="btn-group" dropdown is-open="status.isopen">
+    <div class="btn-group" dropdown is-open="status.isopen2">
       <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
         {{selectedKiosk}} <span class="caret"></span>
       </button>
@@ -57,7 +57,7 @@
           <a ng-click="showPieChartForKiosk(label)">{{label}}</a>
         </li>
       </ul>
-    </div> -->
+    </div>
 
     <canvas id="pie" class="chart chart-pie"
     chart-data="pieData" chart-labels="pieLabels">

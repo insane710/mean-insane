@@ -260,10 +260,7 @@ function createDateWiseJSON(list) {
 
 function sortArray(list) {
   list.sort(function (a, b) {
-    var city1 = a.city;
-    var city2 = b.city;
-    console.log(city1 + city2);
-    return (city1).localeCompare(city2);
+    return (a.city).localeCompare(b.city);
   });
 
   return list;
