@@ -98,35 +98,90 @@ exports.allKiosks = function (req, res) {
     .exec(function (err, statuses) {
 
     });
-    
+
   });
 };
 
-exports.list2 = function (req, res) {
-  Order.aggregate()
-  .group({ _id: '$kioskId', count: {$sum: 1} })
-  .exec(function (err, results) {
-    if (err) {
-        res.json(err);
-    } else {
-        res.json(results);
-    }
-  });
-  // Order.aggregate([
-  //       {
-  //           $group: {
-  //               _id: '$kioskId',  //$region is the column name in collection
-  //               count: {$sum: 1}
-  //           }
-  //       }
-  //   ], function (err, result) {
-  //       if (err) {
-  //           res.json(err);
-  //       } else {
-  //           res.json(result);
-  //       }
-  //   });
+exports.list3 = function (req, res) {
+  // Order.aggregate()
+  // .group({ _id: '$kioskId', count: {$sum: 1} })
+  // .exec(function (err, results) {
+  //   if (err) {
+  //       res.json(err);
+  //   } else {
+  //       res.json(results);
+  //   }
+  // });
+  Order.aggregate([
+        {
+            $group: {
+                _id: { kiosk: '$kioskId', orderStatus: '$orderStatus' },
+                count: {$sum: 1}
+            }
+        },
+        {
+          $project: {
+              kioskId: "$_id.kiosk",
+              orderStatus: "$_id.orderStatus",
+              count: 1,
+              _id: 0
+            }
+        },
+        {
+          $sort: {
+            orderStatus: 1
+          }
+        }
+    ], function (err, result) {
+      var result1 = groupBy(result, function(item) {
+          return item.kioskId;
+      });
+
+      var finalResult = createJSON(result1);
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(finalResult);
+        }
+    });
 };
+
+function createJSON(kiosks) {
+  var finalJSONArray = [];
+  for (var i = 0; i < kiosks.length; i++) {
+    var jsonArray = kiosks[i];
+
+    var kioskJSON = {};
+    kioskJSON.id = jsonArray[0].kioskId;
+    kioskJSON.deliveredCount = jsonArray[0].count;
+    kioskJSON.pendingCount = jsonArray[1].count;
+    kioskJSON.undeliveredCount = jsonArray[2].count;
+
+    finalJSONArray.push(kioskJSON);
+  }
+  return finalJSONArray;
+}
+
+function arrayFromObject(obj) {
+    var arr = [];
+    for (var i in obj) {
+        arr.push(obj[i]);
+    }
+    return arr;
+}
+
+function groupBy(list, fn) {
+    var groups = {};
+    for (var i = 0; i < list.length; i++) {
+        var group = JSON.stringify(fn(list[i]));
+        if (group in groups) {
+            groups[group].push(list[i]);
+        } else {
+            groups[group] = [list[i]];
+        }
+    }
+    return arrayFromObject(groups);
+}
 
 exports.list = function (req, res) {
   Order.aggregate()
@@ -136,6 +191,45 @@ exports.list = function (req, res) {
       res.json(err);
     } else {
       res.json(results);
+    }
+  });
+};
+
+exports.ordersCountByDay = function (req, res) {
+  Order.aggregate([
+    {
+      $group : {
+        _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+        count: {
+          $sum: 1
+        }
+      }
+    },
+    // {
+    //   $project: {
+    //     date: {
+    //       $concat: [
+    //           "$_id.fullDate.day",
+    //           "/",
+    //           "$_id.fullDate.month",
+    //           "/",
+    //           "$_id.fullDate.year"
+    //       ]
+    //     },
+    //     count: 1,
+    //     _id: 0
+    //   }
+    // },
+    {
+      $sort: {
+        "_id": 1
+      }
+    }
+  ], function (err, result) {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(result);
     }
   });
 };

@@ -72,7 +72,13 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
     // Find a list of Orders
     $scope.find = function () {
       $scope.orders = Orders.query();
+      $scope.ordersByDay = Orders.ordersCountByDay();
+      $scope.showAllGraphs();
+    };
+
+    $scope.showAllGraphs = function () {
       $scope.showGraph();
+      $scope.showLineGraph();
     };
 
     // Find existing Order
@@ -86,11 +92,33 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
     var deliveredOrders;
     var undeliveredOrders;
     var labels = [];
+    var lineLabels = [];
+
+    $scope.showLineGraph = function() {
+      var orderCountArray = [];
+      angular.forEach($scope.ordersByDay, function(kiosksJSON,index) {
+        orderCountArray.push(kiosksJSON.count);
+        lineLabels.push(kiosksJSON._id);
+      });
+
+      var dataPointsArray = [];
+      for (var i in lineLabels) {
+        var dataJSON = {
+          x: lineLabels[i],
+          y: [orderCountArray[i]],
+          tooltip: ""
+        };
+
+        dataPointsArray.push(dataJSON);
+      }
+      $scope.firstChartData = {
+        series: ['Orders'],
+        data: dataPointsArray
+      };
+
+    };
 
     $scope.showGraph = function() {
-      angular.forEach($scope.orders, function(kiosksJSON,index) {
-        console.log(kiosksJSON._id);
-      });
 
       angular.forEach($scope.orders, function(kiosksJSON,index) {
         if (labels.indexOf(kiosksJSON._id.kiosk) === -1) {
@@ -134,9 +162,9 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
       $scope.series = orderStatuses;
       $scope.barData = [pendingOrders, deliveredOrders, undeliveredOrders];
 
-      totalPendingOrders = pendingOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
-      totalDeliveredOrders = deliveredOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
-      totalUndeliveredOrders = undeliveredOrders.reduce(function(a, b) { return parseInt(a) + parseInt(b); });
+      totalPendingOrders = $scope.sumOfArray(pendingOrders);
+      totalDeliveredOrders = $scope.sumOfArray(deliveredOrders);
+      totalUndeliveredOrders = $scope.sumOfArray(undeliveredOrders);
 
       $scope.pieLabels = orderStatuses;
       $scope.pieData = [totalPendingOrders, totalDeliveredOrders, totalUndeliveredOrders];
@@ -155,6 +183,35 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
         series: orderStatuses,
         data : dataPointsArray
       };
+    };
+
+    $scope.firstChartType = 'line';
+    $scope.firstChartConfig = {
+      labels: false,
+      title : "Orders Received by Day",
+      legend : {
+        display: true,
+        position:'right'
+      },
+      click : function(d) {
+        $scope.messages.push('clicked!');
+      },
+      mouseover : function(d) {
+        $scope.messages.push('mouseover!');
+      },
+      mouseout : function(d) {
+        $scope.messages.push('mouseout!');
+      },
+      innerRadius: 0,
+      lineLegend: 'lineEnd',
+    };
+
+    $scope.sumOfArray = function (array) {
+      var totalSum = 0;
+      for (var index in array) {
+        totalSum =+ parseInt(array[index]);
+      }
+      return totalSum;
     };
 
     $scope.messages = [];
@@ -178,7 +235,7 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
         $scope.messages.push('mouseout!');
       },
       innerRadius: 0,
-      lineLegend: 'lineEnd',
+      lineLegend: 'traditional',
     };
 
     $scope.selectedKiosk = "Select a Kiosk";
@@ -190,6 +247,8 @@ angular.module('orders').controller('OrdersController', ['$scope', '$timeout', '
         $scope.pieData = [pendingOrders[kioskIndex], deliveredOrders[kioskIndex], undeliveredOrders[kioskIndex]];
       }
     };
+
+
     // var acData = {
     //   series: ["Sales", "Income", "Expense"],
     //   data: [{

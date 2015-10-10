@@ -7,6 +7,9 @@ module.exports = function (app) {
   app.route('/api/orders')
     .get(orders.list);
 
+  app.route('/api/ordersByDay')
+    .get(orders.ordersCountByDay);
+
   app.route('/api/orders/:orderId')
     .get(orders.read);
 

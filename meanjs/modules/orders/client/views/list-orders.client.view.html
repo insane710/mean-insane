@@ -1,83 +1,90 @@
 <section ng-controller="OrdersController" ng-init="find()">
 
-  <!-- <div class="page-header">
-    <h1>Orders</h1>
-  </div> -->
-
   <div>
-    <button ng-click="showGraph()">Load</button>
+    <button ng-click="showAllGraphs()">Load</button>
   </div>
 
-  <div class="header">
-    <h1>Angular-Charts (Chart.js)</h1>
-  </div>
-  <div class="header">
-    <h4>Orders by Kiosk</h4>
-  </div>
+  <!-- <div>
+    <canvas id="line" class="chart chart-line"
+    chart-data="lineData" chart-labels="lineLabels"
+    chart-legend="true" chart-series="lineSeries"
+    chart-click="onClick">
+  </canvas>
+</div> -->
 
-  <!-- <canvas id="line" class="chart chart-line"
-  chart-data="data" chart-labels="labels"
-  chart-legend="true" chart-series="series"
-  chart-click="onClick">
-  </canvas> -->
+<div class="container">
+<div class="header">
+  <h1>Angular Charts (D3)</h1>
+</div>
+<div>
+  <div ac-chart="firstChartType" ac-data="firstChartData" ac-config="firstChartConfig" id='linechart' class='linechart'></div>
+</div>
+</div>
 
-  <div class="container">
-    <div class="left">
-      <canvas id="bar" class="chart chart-bar"
-      chart-data="barData" chart-labels="labels"
-      chart-legend="true" chart-series="series">
-    </canvas>
-  </div>
+<div class="header">
+  <h1>Angular-Charts (Chart.js)</h1>
+</div>
+<div class="header">
+  <h4>Orders by Kiosk</h4>
+</div>
 
-  <div class="right">
-    <div class="header">
-      <h4>All Orders</h4>
-    </div>
-
-    <div class="btn-group" dropdown is-open="status.isopen">
-      <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
-        {{selectedKiosk}} <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-        <li ng-repeat="label in labels">
-          <a ng-click="showPieChartForKiosk(label)">{{label}}</a>
-        </li>
-      </ul>
-    </div>
-
-    <canvas id="pie" class="chart chart-pie"
-    chart-data="pieData" chart-labels="pieLabels">
+<div class="container">
+  <div class="left">
+    <canvas id="bar" class="chart chart-bar"
+    chart-data="barData" chart-labels="labels"
+    chart-legend="true" chart-series="series">
   </canvas>
 </div>
+
+<div class="right">
+  <div class="header">
+    <h4>All Orders</h4>
+  </div>
+
+  <div class="btn-group" dropdown is-open="status.isopen">
+    <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
+      {{selectedKiosk}} <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+      <li ng-repeat="label in labels">
+        <a ng-click="showPieChartForKiosk(label)">{{label}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <canvas id="pie" class="chart chart-pie"
+  chart-data="pieData" chart-labels="pieLabels">
+</canvas>
+</div>
 </div>
 
-
-  <!-- <canvas id="doughnut" class="chart chart-doughnut"
-  chart-data="pieData" chart-labels="labels">
-  </canvas> -->
-
-
-  <!-- <div id="grid1" ui-grid="{ data: orders }" class="grid"></div>
-
-  <div class="list-group">
-    <a ng-repeat="order in orders" ui-sref="orders.view({orderId: order._id})" class="list-group-item">
-      <small class="list-group-item-text">
-        <span ng-bind="order.orderId"></span>
-        <span ng-bind="order.createdAt | date:'mediumDate'"></span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="order.vendor"></h4>
-      <p class="list-group-item-text" ng-bind="order.orderStatus"></p>
-    </a>
-  </div>
-  <div class="alert alert-warning text-center" ng-if="orders.$resolved && !orders.length">
-    No orders yet, why don't you <a ui-sref="orders.create">create one</a>?
-  </div> -->
-
-  <div class="header">
-    <h1>Angular Charts (D3)</h1>
-  </div>
-  <div>
+<div class="header">
+  <h1>Angular Charts (D3)</h1>
+</div>
+<div>
   <div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div>
-  </div>
+</div>
 
 </section>
+
+<!-- <div id="grid1" ui-grid="{ data: orders }" class="grid"></div> -->
+
+<!-- <canvas id="doughnut" class="chart chart-doughnut"
+chart-data="pieData" chart-labels="labels">
+</canvas> -->
+
+<!-- <div id="grid1" ui-grid="{ data: orders }" class="grid"></div>
+
+<div class="list-group">
+  <a ng-repeat="order in orders" ui-sref="orders.view({orderId: order._id})" class="list-group-item">
+    <small class="list-group-item-text">
+      <span ng-bind="order.orderId"></span>
+      <span ng-bind="order.createdAt | date:'mediumDate'"></span>
+    </small>
+    <h4 class="list-group-item-heading" ng-bind="order.vendor"></h4>
+    <p class="list-group-item-text" ng-bind="order.orderStatus"></p>
+  </a>
+</div>
+<div class="alert alert-warning text-center" ng-if="orders.$resolved && !orders.length">
+  No orders yet, why don't you <a ui-sref="orders.create">create one</a>?
+</div> -->
